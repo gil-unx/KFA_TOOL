@@ -1,0 +1,4 @@
+
+.vs/*
+*.recipe
+/src/KFA_TOOL/x64
