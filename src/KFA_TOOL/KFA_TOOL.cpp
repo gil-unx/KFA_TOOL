@@ -6,10 +6,10 @@ static void ShowOptions()
 
     std::cout << "King's Field - Additional I/II File unpacker by Gil Unx" << std::endl << std::endl;
 	std::cout << "Usage:"  << std::endl;
-	std::cout << "	KFA_TOOL -d	main.dat		decrypt main.dat to main.dec" << std::endl;
-	std::cout << "	KFA_TOOL -e	main.dec		encrypt main.dec to main_new.dat" << std::endl;
-	std::cout << "	KFA_TOOL -x	main.dec		unpack main.dec" << std::endl;
-	std::cout << "	KFA_TOOL -c	main.dec		repack main.dec" << std::endl;
+	std::cout << "	KFA_TOOL -d	./main.dat		decrypt main.dat to main.dec" << std::endl;
+	std::cout << "	KFA_TOOL -e	./main.dec		encrypt main.dec to main_new.dat" << std::endl;
+	std::cout << "	KFA_TOOL -x	./main.dec		unpack main.dec" << std::endl;
+	std::cout << "	KFA_TOOL -c	./main.dec		repack main.dec" << std::endl;
 
 
 
