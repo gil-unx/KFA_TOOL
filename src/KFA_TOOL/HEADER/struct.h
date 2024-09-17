@@ -6,7 +6,7 @@ struct MainDatHdr
 	int unk;
 	int mainDatSize;
 	char unkArray1[0x18];
-	char ULJS00076[0x24];
+	char ULJS[0x24];
 	int sysEnd;
 	int sysBinStart;
 	char unkArray2[8];

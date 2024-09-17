@@ -4,13 +4,12 @@
 #include "struct.h"
 #include "switch.h"
 #include "mess.h"
-void UnpackBin(std::string binName, char* bin, int ref) {
+void UnpackBin(std::string binName, char* bin, int ref,std::string internalName) {
 	std::string outF = RemExt(binName);
-	std::string outName, internalName;
+	std::string outName;
 	int size, count;
 	char* ptBin = bin;
 	BinHeader* binHdr = reinterpret_cast<BinHeader*>(bin);
-	internalName = switch_name[sjisToWs(binHdr->internalName)];
 	binHdr->offset0_bin -= ref;
 	binHdr->offset1_bin -= ref;
 	binHdr->offset2_mess -= ref;
@@ -105,14 +104,13 @@ void UnpackBin(std::string binName, char* bin, int ref) {
 	outName = std::format("{:s}.toc", outF);
 	FileSave(outName, (char*)binHdr, sizeof(BinHeader));
 }
-void RepackBin(std::string binName, char* bin, int ref) {
+void RepackBin(std::string binName, char* bin, int ref, std::string internalName) {
 	std::string inF = RemExt(binName);
-	std::string inName, internalName;
+	std::string inName;
 	int size, count;
 	inName = std::format("{:s}.toc", inF);
 	BufferLoad(inName, bin, &size);
 	BinHeader* binHdr = reinterpret_cast<BinHeader*>(bin);
-	internalName = switch_name[sjisToWs(binHdr->internalName)];
 	binHdr->offset0_bin = size;
 	char* ptBin = (bin + binHdr->offset0_bin);
 	//BIN{idx}/0000.bin tidak di unpack untuk sekarang

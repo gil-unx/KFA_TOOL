@@ -178,12 +178,21 @@ void MainDatEncrypt(std::string fileName)
 }
 void MainDatUnpack(std::string maindatName) {
 	std::string outF = RemExt(maindatName);
-	std::string outName,internalName;
+	std::string outName;
+	std::vector<std::string> internalNames;
 	char* mainDat, * ptSys, * ptBin;
 	int* ptr;
 	int size, count, index, offset;
 	mainDat = FileLoad(maindatName, &size);
 	MainDatHdr* maindatHdr = reinterpret_cast<MainDatHdr*>(mainDat);
+	if (strcmp(maindatHdr->ULJS, &("ULJS00070")[0]) == 0)
+	{
+		internalNames = ULJS00070;
+	}
+	else if (strcmp(maindatHdr->ULJS, &("ULJS00076")[0]) == 0)
+	{
+		internalNames = ULJS00076;
+	}
 	ptSys = mainDat + maindatHdr->sysBinStart;
 	SysBinHdr* sysBinHdr = reinterpret_cast<SysBinHdr*>(ptSys);
 	//MAIN/SYS
@@ -354,12 +363,11 @@ void MainDatUnpack(std::string maindatName) {
 			ptr++;
 			ptBin = (mainDat + offset);
 			outName = std::format("{:s}\\{:04d}.bin", outF, i);
-			UnpackBin(outName, ptBin, offset);
+			UnpackBin(outName, ptBin, offset, internalNames[i]);
 			BinHeader* binHdr = reinterpret_cast<BinHeader*>(ptBin);
-			auto c = sjisToWs(binHdr->internalName);
-			internalName = switch_name[c];
+			
 			ptBin = mainDat + binHdr->bndOffset;
-			outName = std::format("{:s}\\{:04d}_{:s}.bnd", outF, i, internalName);
+			outName = std::format("{:s}\\{:04d}_{:s}.bnd", outF, i, internalNames[i]);
 			FileSave(outName, ptBin, binHdr->bndSize);
 		}
 	}
@@ -409,7 +417,8 @@ void MainDatUnpack(std::string maindatName) {
 }
 void MainDatRepack(std::string maindatName, bool alignSys = false) {
 	std::string inF = RemExt(maindatName);
-	std::string inName,internalName;
+	std::string inName;
+	std::vector<std::string> internalNames;
 	int size, count, reference, pos, offset, newOffset, index;
 	char *mainDat, * ptMain, * sysBin, * ptSysBin, * ptBin;
 	int* ptr;
@@ -419,6 +428,14 @@ void MainDatRepack(std::string maindatName, bool alignSys = false) {
 	BufferLoad(inName, mainDat, &size);
 	ptMain = mainDat;
 	MainDatHdr* maindatHdr = reinterpret_cast<MainDatHdr*>(mainDat);
+	if (strcmp(maindatHdr->ULJS, &("ULJS00070")[0]) == 0)
+	{
+		internalNames = ULJS00070;
+	}
+	else if (strcmp(maindatHdr->ULJS, &("ULJS00076")[0]) == 0)
+	{
+		internalNames = ULJS00076;
+	}
 	sysBin = mainDat + maindatHdr->sysBinStart;
 	ptSysBin = sysBin;
 	inName = std::format("{:s}\\_SYS.toc", inF);
@@ -684,7 +701,7 @@ void MainDatRepack(std::string maindatName, bool alignSys = false) {
 		for (size_t i = 0; i < count; i++)
 		{
 			inName = std::format("{:s}\\{:04d}.bin", inF, i);
-			RepackBin(inName, ptBin, newOffset);
+			RepackBin(inName, ptBin, newOffset,internalNames[i]);
 			BinHeader* binHdr = reinterpret_cast<BinHeader*>(ptBin);
 			*ptr++ = binHdr->binSize;
 			index = *ptr++;
@@ -726,9 +743,8 @@ void MainDatRepack(std::string maindatName, bool alignSys = false) {
 				ptr++;
 				ptBin = (mainDat + offset);
 				BinHeader* binHdr = reinterpret_cast<BinHeader*>(ptBin);
-				internalName = switch_name[sjisToWs(binHdr->internalName)];
 				ptBin = (mainDat + newOffset);
-				inName = std::format("{:s}\\{:04d}_{:s}.bnd", inF, i,internalName);
+				inName = std::format("{:s}\\{:04d}_{:s}.bnd", inF, i,internalNames[i]);
 				BufferLoad(inName, ptBin, &size);
 				binHdr->bndOffset = newOffset;
 				binHdr->bndSize = size;

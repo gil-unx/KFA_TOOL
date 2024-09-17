@@ -30,20 +30,24 @@ int main(int argc, char* argv[])
         if (std::strcmp(argv[1], "-d") == 0)
         {
             MainDatDecrypt(argv[2]);
+            std::cout << "Decrypt done!" << std::endl;
         }
         else if (std::strcmp(argv[1], "-e") == 0)
         {
             MainDatEncrypt(argv[2]);
+            std::cout << "Encrypt done!" << std::endl;
 
         }
         else if (std::strcmp(argv[1], "-x") == 0)
         {
             MainDatUnpack(argv[2]);
+            std::cout << "Unpack done!" << std::endl;
 
         }
         else if (std::strcmp(argv[1], "-c") == 0)
         {
             MainDatRepack(argv[2]);
+            std::cout << "Repack done!" << std::endl;
 
         }
         else
